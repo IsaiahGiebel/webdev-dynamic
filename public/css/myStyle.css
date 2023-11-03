@@ -4,18 +4,18 @@ body {
 
 
 table {
-    border-collapse: collapse; /* This ensures that the border doesn't double up */
-    width: 50%; /* This sets the table to take up the full width of its container */
+    border-collapse: collapse;
+    width: 50%;
   }
   
   th, td {
-    border: 1px solid black; /* This adds a black border around every cell */
-    padding: 1px; /* This adds some space between the cell content and the borders */
-    text-align: center; /* This centers the text in the cells */
+    border: 1px solid black;
+    padding: 1px;
+    text-align: center;
   }
   
   th {
-    background-color: lightblue; /* This gives a grey background to the header cells */
+    background-color: lightblue;
   }
   .navbar a {   
     text-decoration: none; 
@@ -81,3 +81,22 @@ h2 {
     margin-bottom: 1rem; /* Adjust as needed */
     font-size: 1.2rem;
 }
+button{
+    text-decoration: none; 
+      list-style-type: none;
+      text-align: center;
+  
+      color: white;
+      padding-left: 5rem;
+      padding-right: 5rem;
+      padding-top: .5rem;
+      padding-bottom: .5rem;
+      background-color: #000000;
+      border: .5rem;
+      border-color:#000000;
+      border-radius: 10%;
+  }
+  script{
+    width: 40%;
+    float: left;
+  }

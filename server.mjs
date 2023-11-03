@@ -184,7 +184,7 @@ app.get('/winpercent/:category', (req, res) => {
         res.status(200).type('html').send(response);
     }).catch((error) => {
         console.error(error);
-        res.status(500).send("An error occurred on the server.");
+        res.status(500).send(error);
     });
 });
 
