@@ -3,11 +3,11 @@
     "description": "Dynamic Server",
     "version": "1.0.0",
     "author": {
-        "name": "",
-        "email": ""
+        "name": "Isaiah Giebel",
+        "email": "gieb9803@stthomas.edu"
     },
-    "contributors": [],
-    "repository": {},
+    "contributors": ["Isaiah Giebel","Noah Kruse"],
+    "repository": {"url": "https://github.com/IsaiahGiebel/webdev-dynamic"},
     "dependencies": {
         "express": "^4.18.2",
         "sqlite3": "^5.1.6"
