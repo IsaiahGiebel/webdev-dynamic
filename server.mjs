@@ -65,7 +65,9 @@ app.get('/sugarpercent/:category', (req, res) => {
     let category = req.params.category;
     let sugarMin;
     let sugarMax;
-    
+    if (category != 'low' && category != 'medium' && category !='high'){
+        res.status(404).send("Error: " +category+" is not a valid range");
+    }
     switch (category) {
         case 'low':
             sugarMin = 0;
@@ -78,11 +80,6 @@ app.get('/sugarpercent/:category', (req, res) => {
         case 'high':
             sugarMin = 0.6
             sugarMax = 1; // Assuming 'high' is sugarpercent < 0.5
-            break;
-        default:
-            // Handle unknown category or set a default
-            sugarMin = 0;
-            sugarMax = 0.3;
             break;
     }
     // You don't need to perform a query with the candy name here since your queries don't use it.
@@ -129,7 +126,9 @@ app.get('/winpercent/:category', (req, res) => {
     let category = req.params.category;
     let winMin;
     let winMax;
-    
+    if (category != 'low' && category != 'medium' && category !='high'){
+        res.status(404).send("Error: " +category+" is not a valid range");
+    }
     switch (category) {
         case 'low':
             winMin = 0;
@@ -137,16 +136,11 @@ app.get('/winpercent/:category', (req, res) => {
             break;
         case 'medium':
             winMin = 40
-            winMax = 60; // Assuming 'medium' is sugarpercent < 0.3
+            winMax = 55; // Assuming 'medium' is sugarpercent < 0.3
             break;
         case 'high':
-            winMin = 60
+            winMin = 55
             winMax = 100; // Assuming 'high' is sugarpercent < 0.5
-            break;
-        default:
-            // Handle unknown category or set a default
-            winMin = 60;
-            winMax = 100;
             break;
     }
     // You don't need to perform a query with the candy name here since your queries don't use it.
@@ -192,7 +186,9 @@ app.get('/pricepercent/:category', (req, res) => {
     let category = req.params.category;
     let priceMin;
     let priceMax;
-    
+    if (category != 'low' && category != 'medium' && category !='high'){
+        res.status(404).send("Error: " +category+" is not a valid range");
+    }
     switch (category) {
         case 'low':
             priceMin = 0;
@@ -205,11 +201,6 @@ app.get('/pricepercent/:category', (req, res) => {
         case 'high':
             priceMin = 0.6
             priceMax = 1; // Assuming 'high' is sugarpercent < 0.5
-            break;
-        default:
-            // Handle unknown category or set a default
-            priceMin = 0;
-            priceMax = 0.3;
             break;
     }
     // You don't need to perform a query with the candy name here since your queries don't use it.

@@ -67,3 +67,15 @@ h2 {
 .prevNext a{
     padding: 0.5rem;
 }
+
+#featured-image-container {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+#image-caption {
+    width: 50%;
+    text-align: center;
+    margin-bottom: 20px; /* Adjust as needed */
+}
