@@ -6,10 +6,16 @@
         "name": "Isaiah Giebel",
         "email": "gieb9803@stthomas.edu"
     },
-    "contributors": ["Isaiah Giebel","Noah Kruse"],
-    "repository": {"url": "https://github.com/IsaiahGiebel/webdev-dynamic"},
+    "contributors": [
+        "Isaiah Giebel",
+        "Noah Kruse"
+    ],
+    "repository": {
+        "url": "https://github.com/IsaiahGiebel/webdev-dynamic"
+    },
     "dependencies": {
         "express": "^4.18.2",
+        "plotly": "^1.0.6",
         "sqlite3": "^5.1.6"
     }
 }

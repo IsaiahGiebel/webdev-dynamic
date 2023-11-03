@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>Page Title</title>
         <link rel="stylesheet" href="/css/myStyle.css"/>
+        <script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>
     </head>
     <body>
         <div class="navbar">
@@ -43,5 +44,20 @@
                 $$TABLE_BODY$$
             </tbody>
         </table>
+        <br>
+    <div id="tester" style="width:600px;height:250px;"></div>
+    <script>
+        TESTER = document.getElementById('tester');
+        Plotly.newPlot(TESTER, [{
+            x: [$$NAMES$$],
+            y: [$$VALUES$$],
+        }], {
+            margin: { t: 0 }
+        });
+    </script>
+    <a style="text-align: right;" href="/winpercent/$$CATEGORY_NAME$$"><button
+            style="float: left;">Previous</button></a>
+    <a style="text-align: right;" href="/pricepercent/$$CATEGORY_NAME$$"><button style="float: right;">Next</button></a>
+    <br>
     </body>
 </html>

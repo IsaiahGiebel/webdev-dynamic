@@ -81,11 +81,16 @@ app.get('/sugarpercent/:category', (req, res) => {
 
     Promise.all([p1, p2]).then(results => {
         let template = results[1];
-        let response = template.replace('$$CATEGORY_NAME$$', category);
+        let response = template.replaceAll('$$CATEGORY_NAME$$', category); 
+        let nameList = []
+        let namesList = []
+        let percList = []
         
         let table_body = results[0].map((candy,index) => {
             const imageName = slugify(candy.competitorname) + '.jpg';
             const imagePath = `/images/${imageName}`;
+            nameList.push(candy.competitorname);
+            percList.push(parseFloat(candy.sugarpercent).toFixed(2))
             const imageTag = index === 0 ? `<img src="${imagePath}" alt="Image of ${candy.competitorname}" style="max-width:10rem;max-height:8rem;">` : '';
             response = response.replace('$$FEATURED_IMAGE$$', imageTag);
             response = response.replace('$$IMAGE_CAPTION$$', candy.competitorname);
@@ -99,7 +104,15 @@ app.get('/sugarpercent/:category', (req, res) => {
                 <td>${convertToYesNo(candy.pluribus)}</td>
             </tr>`;
         }).join('');//join all strings into one
+        for (let i = 1; i < nameList.length; i++) {
+            namesList.push(i)
+        }
+        response = response.replaceAll('$$NAMES$$', namesList);
+        response = response.replaceAll('$$VALUES$$', percList);
+        response = response.replaceAll('$$TABLE_BODY$$', table_body);
+       
         response = response.replace('$$TABLE_BODY$$', table_body);
+        
 
         res.status(200).type('html').send(response);
     }).catch((error) => {
@@ -137,11 +150,15 @@ app.get('/winpercent/:category', (req, res) => {
 
     Promise.all([p1, p2]).then(results => {
         let template = results[1];
-        let response = template.replace('$$CATEGORY_NAME$$', category);
-        
+        let response = template.replaceAll('$$CATEGORY_NAME$$', category); 
+        let nameList = []
+        let namesList = []
+        let percList = []
         let table_body = results[0].map((candy,index) => {
             const imageName = slugify(candy.competitorname) + '.jpg';
             const imagePath = `/images/${imageName}`;
+            nameList.push(candy.competitorname);
+            percList.push(parseFloat(candy.sugarpercent).toFixed(2))
             const imageTag = index === 0 ? `<img src="${imagePath}" alt="${candy.competitorname}" style="max-width:10rem;max-height:8rem;">` : '';
             response = response.replace('$$FEATURED_IMAGE$$', imageTag);
             response = response.replace('$$IMAGE_CAPTION$$', candy.competitorname);
@@ -155,6 +172,13 @@ app.get('/winpercent/:category', (req, res) => {
                 <td>${convertToYesNo(candy.pluribus)}</td>
             </tr>`;
         }).join('');//join all strings into one
+        for (let i = 1; i < nameList.length; i++) {
+            namesList.push(i)
+        }
+        response = response.replaceAll('$$NAMES$$', namesList);
+        response = response.replaceAll('$$VALUES$$', percList);
+        response = response.replaceAll('$$TABLE_BODY$$', table_body);
+       
         response = response.replace('$$TABLE_BODY$$', table_body);
 
         res.status(200).type('html').send(response);
@@ -193,11 +217,16 @@ app.get('/pricepercent/:category', (req, res) => {
 
     Promise.all([p1, p2]).then(results => {
         let template = results[1];
-        let response = template.replace('$$CATEGORY_NAME$$', category); 
+        let response = template.replaceAll('$$CATEGORY_NAME$$', category); 
+        let nameList = []
+        let namesList = []
+        let percList = []
         
         let table_body = results[0].map((candy,index) => { 
             const imageName = slugify(candy.competitorname) + '.jpg';
             const imagePath = `/images/${imageName}`;
+            nameList.push(candy.competitorname);
+            percList.push(parseFloat(candy.sugarpercent).toFixed(2))
             const imageTag = index === 0 ? `<img src="${imagePath}" alt="${candy.competitorname}" style="max-width:10rem;max-height:8rem;">` : '';
             response = response.replace('$$FEATURED_IMAGE$$', imageTag);
             response = response.replace('$$IMAGE_CAPTION$$', candy.competitorname);
@@ -211,6 +240,13 @@ app.get('/pricepercent/:category', (req, res) => {
                 <td>${convertToYesNo(candy.pluribus)}</td>
             </tr>`;
         }).join(''); //join all strings into one
+        for (let i = 1; i < nameList.length; i++) {
+            namesList.push(i)
+        }
+        response = response.replaceAll('$$NAMES$$', namesList);
+        response = response.replaceAll('$$VALUES$$', percList);
+        response = response.replaceAll('$$TABLE_BODY$$', table_body);
+       
         response = response.replace('$$TABLE_BODY$$', table_body); 
 
         res.status(200).type('html').send(response); 
@@ -224,3 +260,66 @@ app.get('/pricepercent/:category', (req, res) => {
 app.listen(port, () =>{
     console.log('Now listening on port'+port);
 });
+
+function graphDraw(names, values) {
+
+    var graphtrace = {
+        type: 'scatter',
+        x: names,
+        y: values,
+        mode: 'markers',
+        name: '',
+        marker: {
+            color: 'rgb(255, 0, 0)',
+            line: {
+                color: 'rgb(0,0,255)',
+                width: 1,
+            },
+            symbol: 'circle',
+            size: 16
+        }
+    };
+
+    var layout = {
+        title: 'Candy Graph',
+        xaxis: {
+            showgrid: false,
+            showline: true,
+            linecolor: 'rgb(102, 102, 102)',
+            titlefont: {
+                font: {
+                    color: 'rgb(204, 204, 204)'
+                }
+            },
+            tickfont: {
+                font: {
+                    color: 'rgb(102, 102, 102)'
+                }
+            },
+            autotick: false,
+            dtick: 10,
+            ticks: 'outside',
+            tickcolor: 'rgb(102, 102, 102)'
+        },
+        margin: {
+            l: 140,
+            r: 40,
+            b: 50,
+            t: 80
+        },
+        legend: {
+            font: {
+                size: 10,
+            },
+            yanchor: 'middle',
+            xanchor: 'right'
+        },
+        width: 600,
+        height: 600,
+        paper_bgcolor: 'rgb(254, 247, 234)',
+        plot_bgcolor: 'rgb(254, 247, 234)',
+        hovermode: 'closest'
+    };
+
+    return Plotly.newPlot("myGraph", graphtrace, layout);
+};
