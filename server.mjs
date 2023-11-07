@@ -59,6 +59,8 @@ app.get('/sugarpercent/:category', (req, res) => {
     let category = req.params.category;
     let sugarMin;
     let sugarMax;
+    let categoryLess;
+    let categoryMore;
     if (category != 'low' && category != 'medium' && category !='high'){
         res.status(404).send("Error: " +category+" is not a valid range");
     }
@@ -66,14 +68,20 @@ app.get('/sugarpercent/:category', (req, res) => {
         case 'low':
             sugarMin = 0;
             sugarMax = 0.3;
+            categoryLess='low'
+            categoryMore='medium'
             break;
         case 'medium':
             sugarMin = 0.3
             sugarMax = 0.6;
+            categoryLess='low'
+            categoryMore='high'
             break;
         case 'high':
             sugarMin = 0.6
             sugarMax = 1;
+            categoryLess='medium'
+            categoryMore='high'
             break;
     }
     let p1 = dbSelect('SELECT * FROM candy WHERE sugarpercent < ? AND sugarpercent >= ? ORDER BY sugarpercent',[sugarMax,sugarMin]);
@@ -81,7 +89,9 @@ app.get('/sugarpercent/:category', (req, res) => {
 
     Promise.all([p1, p2]).then(results => {
         let template = results[1];
-        let response = template.replaceAll('$$CATEGORY_NAME$$', category); 
+        let response = template.replaceAll('$$CATEGORY_NAME$$', category);
+        response = response.replaceAll('$$CATEGORY_LESS$$', categoryLess);
+        response = response.replaceAll('$$CATEGORY_MORE$$',categoryMore);
         let nameList = []
         let namesList = []
         let percList = []
@@ -109,10 +119,7 @@ app.get('/sugarpercent/:category', (req, res) => {
         }
         response = response.replaceAll('$$NAMES$$', namesList);
         response = response.replaceAll('$$VALUES$$', percList);
-        response = response.replaceAll('$$TABLE_BODY$$', table_body);
-       
-        response = response.replace('$$TABLE_BODY$$', table_body);
-        
+        response = response.replaceAll('$$TABLE_BODY$$', table_body);        
 
         res.status(200).type('html').send(response);
     }).catch((error) => {
@@ -128,6 +135,8 @@ app.get('/winpercent/:category', (req, res) => {
     let category = req.params.category;
     let winMin;
     let winMax;
+    let categoryLess;
+    let categoryMore;
     if (category != 'low' && category != 'medium' && category !='high'){
         res.status(404).send("Error: " +category+" is not a valid range");
     }
@@ -135,14 +144,20 @@ app.get('/winpercent/:category', (req, res) => {
         case 'low':
             winMin = 0;
             winMax = 40;
+            categoryLess='low'
+            categoryMore='medium'
             break;
         case 'medium':
             winMin = 40
             winMax = 55;
+            categoryLess='low'
+            categoryMore='high'
             break;
         case 'high':
             winMin = 55
             winMax = 100;
+            categoryLess='medium'
+            categoryMore='high'
             break;
     }
     let p1 = dbSelect('SELECT * FROM candy WHERE winpercent < ? AND winpercent >= ? ORDER BY winpercent DESC',[winMax,winMin]);
@@ -150,7 +165,9 @@ app.get('/winpercent/:category', (req, res) => {
 
     Promise.all([p1, p2]).then(results => {
         let template = results[1];
-        let response = template.replaceAll('$$CATEGORY_NAME$$', category); 
+        let response = template.replaceAll('$$CATEGORY_NAME$$', category);
+        response = response.replaceAll('$$CATEGORY_LESS$$', categoryLess);
+        response = response.replaceAll('$$CATEGORY_MORE$$',categoryMore);
         let nameList = []
         let namesList = []
         let percList = []
@@ -179,8 +196,6 @@ app.get('/winpercent/:category', (req, res) => {
         response = response.replaceAll('$$VALUES$$', percList);
         response = response.replaceAll('$$TABLE_BODY$$', table_body);
        
-        response = response.replace('$$TABLE_BODY$$', table_body);
-
         res.status(200).type('html').send(response);
     }).catch((error) => {
         console.error(error);
@@ -195,6 +210,8 @@ app.get('/pricepercent/:category', (req, res) => {
     let category = req.params.category;
     let priceMin;
     let priceMax;
+    let categoryLess;
+    let categoryMore;
     if (category != 'low' && category != 'medium' && category !='high'){
         res.status(404).send("Error: " +category+" is not a valid range");
     }
@@ -202,14 +219,20 @@ app.get('/pricepercent/:category', (req, res) => {
         case 'low':
             priceMin = 0;
             priceMax = 0.3; 
+            categoryLess='low'
+            categoryMore='medium'
             break;
         case 'medium':
             priceMin = 0.3
             priceMax = 0.6; 
+            categoryLess='low'
+            categoryMore='high'
             break;
         case 'high':
             priceMin = 0.6
             priceMax = 1; 
+            categoryLess='medium'
+            categoryMore='high'
             break;
     }
     let p1 = dbSelect('SELECT * FROM candy WHERE pricepercent < ? AND pricepercent >= ? ORDER BY pricepercent',[priceMax,priceMin]);
@@ -217,7 +240,9 @@ app.get('/pricepercent/:category', (req, res) => {
 
     Promise.all([p1, p2]).then(results => {
         let template = results[1];
-        let response = template.replaceAll('$$CATEGORY_NAME$$', category); 
+        let response = template.replaceAll('$$CATEGORY_NAME$$', category);
+        response = response.replaceAll('$$CATEGORY_LESS$$', categoryLess);
+        response = response.replaceAll('$$CATEGORY_MORE$$',categoryMore);
         let nameList = []
         let namesList = []
         let percList = []
@@ -247,8 +272,6 @@ app.get('/pricepercent/:category', (req, res) => {
         response = response.replaceAll('$$VALUES$$', percList);
         response = response.replaceAll('$$TABLE_BODY$$', table_body);
        
-        response = response.replace('$$TABLE_BODY$$', table_body); 
-
         res.status(200).type('html').send(response); 
     }).catch((error) => {
         console.error(error);
