@@ -22,6 +22,11 @@
             <a href="/pricepercent/medium">medium</a>
             <a href="/pricepercent/high">high</a>
         </div>
+        <div class="prevNext">
+            <a style="text-align: right;" href="/sugarpercent/$$CATEGORY_NAME$$"><button
+                style="align-items: center;">Previous</button></a>
+            <a style="text-align: right;" href="/winpercent/$$CATEGORY_NAME$$"><button style="align-items: center;">Next</button></a>
+        </div>
         <div id="featured-image-container">
             $$FEATURED_IMAGE$$
         </div>
@@ -44,8 +49,7 @@
                 $$TABLE_BODY$$
             </tbody>
         </table>
-        <br>
-    <div id="tester" style="width:600px;height:250px;"></div>
+    <div id="tester"></div>
     <script>
         TESTER = document.getElementById('tester');
         Plotly.newPlot(TESTER, [{
@@ -55,9 +59,6 @@
             margin: { t: 0 }
         });
     </script>
-    <a style="text-align: right;" href="/sugarpercent/$$CATEGORY_NAME$$"><button
-            style="float: left;">Previous</button></a>
-    <a style="text-align: right;" href="/winpercent/$$CATEGORY_NAME$$"><button style="float: right;">Next</button></a>
-    <br>
+    </div>
     </body>
 </html>
