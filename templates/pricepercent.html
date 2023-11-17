@@ -6,6 +6,8 @@
         <title>Page Title</title>
         <link rel="stylesheet" href="/css/myStyle.css"/>
         <script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     </head>
     <body>
         <div class="navbar">
@@ -14,51 +16,62 @@
             <li><a href="/sugarpercent/low">Sugar Percent</a></li>
             <li><a href="/pricepercent/low">Price Percent</a></li>
         </div>
-        <h1>Price Percent</h1>
 
-        <h2>Results for $$CATEGORY_NAME$$ price</h2>
-        <div class="prevNext">
-            <a href="/pricepercent/low">low</a>
-            <a href="/pricepercent/medium">medium</a>
-            <a href="/pricepercent/high">high</a>
+        <div id="alongside">
+            <div id="image">
+                <div id="featured-image-container">
+                    $$FEATURED_IMAGE$$
+                </div>
+            </div>
+            <div id="title">
+                <h1>Price Percent</h1>
+            </div>
         </div>
-        <div class="prevNext">
-            <a style="text-align: right;" href="/pricepercent/$$CATEGORY_LESS$$"><button
-                style="align-items: center;">Previous</button></a>
-            <a style="text-align: right;" href="/pricepercent/$$CATEGORY_MORE$$"><button style="align-items: center;">Next</button></a>
+
+        <div id="alongside">
+            <h2 class="resultsFor">Results for $$CATEGORY_NAME$$ price</h2>
+            <div class="prevNext" id="highlight">
+                <p>Select:</p>
+                <a href="/pricepercent/low">low</a>
+                <a href="/pricepercent/medium">medium</a>
+                <a href="/pricepercent/high">high</a>
+            </div>
         </div>
-        <div id="featured-image-container">
-            $$FEATURED_IMAGE$$
-        </div>
-        <div id="image-caption">
-            $$IMAGE_CAPTION$$
-        </div>
+
         <table>
             <thead>
                 <tr>
                     <th>Candy Name</th>
-                    <th>Price Percentage</th>
+                    <th>Sugar Percent</th>
                     <th>Chocolate</th>
                     <th>Fruity</th>
 					<th>Nutty</th>
                     <th>Caramel</th>
-                    <th>Packs of Many</th>
+                    <th>Other</th>
                 </tr>
             </thead>
             <tbody>
                 $$TABLE_BODY$$
             </tbody>
         </table>
-    <div id="tester"></div>
-    <script>
-        TESTER = document.getElementById('tester');
-        Plotly.newPlot(TESTER, [{
-            x: [$$NAMES$$],
-            y: [$$VALUES$$],
-        }], {
-            margin: { t: 0 }
-        });
-    </script>
+    <div id="tester">
+        <script>
+            TESTER = document.getElementById('tester');
+            Plotly.newPlot(TESTER, [{
+             
+                x: ['Chocolate', 'Fruity', 'Nutty','Caramel','Other'],
+                y: ['$$CHOCOLATE_COUNT$$', '$$FRUITY_COUNT$$', '$$NUTTY_COUNT$$', '$$CARAMEL_COUNT$$', '$$OTHER_COUNT$$'],
+                type: 'bar',
+                marker: {
+                color: '#D10000'
+                    }
+                 }
+            ]
+       );
+
+        </script>
     </div>
+    <script>$("a[href*='" + location.pathname + "']").addClass("current");
+    </script>
     </body>
 </html>

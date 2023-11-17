@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
 
 //function to convert 1 and 0 to yes and no for table data displayed on web page
 function convertToYesNo(value) {
-    return value === 1 ? 'Yes' : 'No';
+    return value ? 'Yes' : 'No';
 }
 
 //makes candy names readable as files
@@ -84,6 +84,8 @@ app.get('/sugarpercent/:category', (req, res) => {
             categoryMore='high'
             break;
     }
+
+
     let p1 = dbSelect('SELECT * FROM candy WHERE sugarpercent < ? AND sugarpercent >= ? ORDER BY sugarpercent',[sugarMax,sugarMin]);
     let p2 = fs.promises.readFile(path.join(template, 'sugarpercent.html'), 'utf-8');
 
@@ -92,16 +94,29 @@ app.get('/sugarpercent/:category', (req, res) => {
         let response = template.replaceAll('$$CATEGORY_NAME$$', category);
         response = response.replaceAll('$$CATEGORY_LESS$$', categoryLess);
         response = response.replaceAll('$$CATEGORY_MORE$$',categoryMore);
-        let nameList = []
-        let namesList = []
-        let percList = []
+ 
+            
+        //for making the barchart
+        let chocolateCount = 0;
+        let fruityCount = 0;
+        let nuttyCount = 0;
+        let caramelCount = 0;
+        let otherCount = 0;
         
         let table_body = results[0].map((candy,index) => {
+
+            //for making the barchart
+            if (candy.chocolate) chocolateCount++;
+            if (candy.fruity) fruityCount++;
+            if (candy.peanutyalmondy) nuttyCount++;
+            if (candy.caramel) caramelCount++;
+            if (!candy.chocolate && !candy.fruity && !candy.peanutyalmondy && !candy.caramel){
+                otherCount++;
+            }
+
             const imageName = slugify(candy.competitorname) + '.jpg';
             const imagePath = `/images/${imageName}`;
-            nameList.push(candy.competitorname);
-            percList.push(parseFloat(candy.sugarpercent).toFixed(2))
-            const imageTag = index === 0 ? `<img src="${imagePath}" alt="Image of ${candy.competitorname}" style="max-width:10rem;max-height:8rem;">` : '';
+            const imageTag = index === 0 ? `<img src="${imagePath}" alt="Image of ${candy.competitorname}" style="max-width:10rem;max-height:6rem;">` : '';
             response = response.replace('$$FEATURED_IMAGE$$', imageTag);
             response = response.replace('$$IMAGE_CAPTION$$', candy.competitorname);
             return `<tr>
@@ -111,14 +126,16 @@ app.get('/sugarpercent/:category', (req, res) => {
                 <td>${convertToYesNo(candy.fruity)}</td>
                 <td>${convertToYesNo(candy.peanutyalmondy)}</td>
                 <td>${convertToYesNo(candy.caramel)}</td>
-                <td>${convertToYesNo(candy.pluribus)}</td>
+                <td>${convertToYesNo(!candy.chocolate && !candy.fruity && !candy.peanutyalmondy && !candy.caramel)}</td>
             </tr>`;
         }).join('');//join all strings into one
-        for (let i = 1; i < nameList.length; i++) {
-            namesList.push(i)
-        }
-        response = response.replaceAll('$$NAMES$$', namesList);
-        response = response.replaceAll('$$VALUES$$', percList);
+
+        response = response.replaceAll('$$CHOCOLATE_COUNT$$', chocolateCount)
+                           .replaceAll('$$FRUITY_COUNT$$', fruityCount)
+                           .replaceAll('$$NUTTY_COUNT$$', nuttyCount)
+                           .replaceAll('$$CARAMEL_COUNT$$', caramelCount)
+                           .replaceAll('$$OTHER_COUNT$$', otherCount);
+
         response = response.replaceAll('$$TABLE_BODY$$', table_body);        
 
         res.status(200).type('html').send(response);
@@ -168,33 +185,49 @@ app.get('/winpercent/:category', (req, res) => {
         let response = template.replaceAll('$$CATEGORY_NAME$$', category);
         response = response.replaceAll('$$CATEGORY_LESS$$', categoryLess);
         response = response.replaceAll('$$CATEGORY_MORE$$',categoryMore);
-        let nameList = []
-        let namesList = []
-        let percList = []
+ 
+            
+        //for making the barchart
+        let chocolateCount = 0;
+        let fruityCount = 0;
+        let nuttyCount = 0;
+        let caramelCount = 0;
+        let otherCount = 0;
+        
         let table_body = results[0].map((candy,index) => {
+
+            //for making the barchart
+            if (candy.chocolate) chocolateCount++;
+            if (candy.fruity) fruityCount++;
+            if (candy.peanutyalmondy) nuttyCount++;
+            if (candy.caramel) caramelCount++;
+            if (!candy.chocolate && !candy.fruity && !candy.peanutyalmondy && !candy.caramel){
+                otherCount++;
+            }
+
             const imageName = slugify(candy.competitorname) + '.jpg';
             const imagePath = `/images/${imageName}`;
-            nameList.push(candy.competitorname);
-            percList.push(parseFloat(candy.sugarpercent).toFixed(2))
-            const imageTag = index === 0 ? `<img src="${imagePath}" alt="${candy.competitorname}" style="max-width:10rem;max-height:8rem;">` : '';
+            const imageTag = index === 0 ? `<img src="${imagePath}" alt="Image of ${candy.competitorname}" style="max-width:10rem;max-height:6rem;">` : '';
             response = response.replace('$$FEATURED_IMAGE$$', imageTag);
             response = response.replace('$$IMAGE_CAPTION$$', candy.competitorname);
             return `<tr>
                 <td>${candy.competitorname}</td>
-                <td>${parseFloat(candy.winpercent).toFixed(1)+'%'}</td>
+                <td>${parseFloat(candy.sugarpercent).toFixed(2)+'%'}</td>
                 <td>${convertToYesNo(candy.chocolate)}</td>
                 <td>${convertToYesNo(candy.fruity)}</td>
                 <td>${convertToYesNo(candy.peanutyalmondy)}</td>
                 <td>${convertToYesNo(candy.caramel)}</td>
-                <td>${convertToYesNo(candy.pluribus)}</td>
+                <td>${convertToYesNo(!candy.chocolate && !candy.fruity && !candy.peanutyalmondy && !candy.caramel)}</td>
             </tr>`;
         }).join('');//join all strings into one
-        for (let i = 1; i < nameList.length; i++) {
-            namesList.push(i)
-        }
-        response = response.replaceAll('$$NAMES$$', namesList);
-        response = response.replaceAll('$$VALUES$$', percList);
-        response = response.replaceAll('$$TABLE_BODY$$', table_body);
+
+        response = response.replaceAll('$$CHOCOLATE_COUNT$$', chocolateCount)
+                           .replaceAll('$$FRUITY_COUNT$$', fruityCount)
+                           .replaceAll('$$NUTTY_COUNT$$', nuttyCount)
+                           .replaceAll('$$CARAMEL_COUNT$$', caramelCount)
+                           .replaceAll('$$OTHER_COUNT$$', otherCount);
+
+        response = response.replaceAll('$$TABLE_BODY$$', table_body); 
        
         res.status(200).type('html').send(response);
     }).catch((error) => {
@@ -243,34 +276,49 @@ app.get('/pricepercent/:category', (req, res) => {
         let response = template.replaceAll('$$CATEGORY_NAME$$', category);
         response = response.replaceAll('$$CATEGORY_LESS$$', categoryLess);
         response = response.replaceAll('$$CATEGORY_MORE$$',categoryMore);
-        let nameList = []
-        let namesList = []
-        let percList = []
+ 
+            
+        //for making the barchart
+        let chocolateCount = 0;
+        let fruityCount = 0;
+        let nuttyCount = 0;
+        let caramelCount = 0;
+        let otherCount = 0;
         
-        let table_body = results[0].map((candy,index) => { 
+        let table_body = results[0].map((candy,index) => {
+
+            //for making the barchart
+            if (candy.chocolate) chocolateCount++;
+            if (candy.fruity) fruityCount++;
+            if (candy.peanutyalmondy) nuttyCount++;
+            if (candy.caramel) caramelCount++;
+            if (!candy.chocolate && !candy.fruity && !candy.peanutyalmondy && !candy.caramel){
+                otherCount++;
+            }
+
             const imageName = slugify(candy.competitorname) + '.jpg';
             const imagePath = `/images/${imageName}`;
-            nameList.push(candy.competitorname);
-            percList.push(parseFloat(candy.sugarpercent).toFixed(2))
-            const imageTag = index === 0 ? `<img src="${imagePath}" alt="${candy.competitorname}" style="max-width:10rem;max-height:8rem;">` : '';
+            const imageTag = index === 0 ? `<img src="${imagePath}" alt="Image of ${candy.competitorname}" style="max-width:10rem;max-height:6rem;">` : '';
             response = response.replace('$$FEATURED_IMAGE$$', imageTag);
             response = response.replace('$$IMAGE_CAPTION$$', candy.competitorname);
             return `<tr>
                 <td>${candy.competitorname}</td>
-                <td>${parseFloat(candy.pricepercent).toFixed(2)+'%'}</td>
+                <td>${parseFloat(candy.sugarpercent).toFixed(2)+'%'}</td>
                 <td>${convertToYesNo(candy.chocolate)}</td>
                 <td>${convertToYesNo(candy.fruity)}</td>
                 <td>${convertToYesNo(candy.peanutyalmondy)}</td>
                 <td>${convertToYesNo(candy.caramel)}</td>
-                <td>${convertToYesNo(candy.pluribus)}</td>
+                <td>${convertToYesNo(!candy.chocolate && !candy.fruity && !candy.peanutyalmondy && !candy.caramel)}</td>
             </tr>`;
-        }).join(''); //join all strings into one
-        for (let i = 1; i < nameList.length; i++) {
-            namesList.push(i)
-        }
-        response = response.replaceAll('$$NAMES$$', namesList);
-        response = response.replaceAll('$$VALUES$$', percList);
-        response = response.replaceAll('$$TABLE_BODY$$', table_body);
+        }).join('');//join all strings into one
+
+        response = response.replaceAll('$$CHOCOLATE_COUNT$$', chocolateCount)
+                           .replaceAll('$$FRUITY_COUNT$$', fruityCount)
+                           .replaceAll('$$NUTTY_COUNT$$', nuttyCount)
+                           .replaceAll('$$CARAMEL_COUNT$$', caramelCount)
+                           .replaceAll('$$OTHER_COUNT$$', otherCount);
+
+        response = response.replaceAll('$$TABLE_BODY$$', table_body); 
        
         res.status(200).type('html').send(response); 
     }).catch((error) => {
